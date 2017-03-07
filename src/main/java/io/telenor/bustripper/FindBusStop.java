@@ -4,6 +4,7 @@ import org.glassfish.jersey.client.ClientConfig;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * Searches for bus stops in area provided.
@@ -30,7 +31,7 @@ public class FindBusStop implements Runnable {
         client = ClientBuilder.newClient(configuration);
 
         Invocation.Builder invocationBuilder = client
-                .target(SEARCH_URL + searchTerm)
+                .target(UriBuilder.fromUri(SEARCH_URL + searchTerm))
                 .request(MediaType.APPLICATION_JSON);
 
         final AsyncInvoker asyncInvoker = invocationBuilder.async();
