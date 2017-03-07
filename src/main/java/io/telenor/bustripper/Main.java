@@ -20,16 +20,19 @@ public class Main {
 
             @Override
             public synchronized void gotTrips(Set<BusTrip> trips, boolean done) {
-                allTrips.addAll(trips);
+                int numOfTripsNeeded = 10 - allTrips.size();
+                if(numOfTripsNeeded > 0) {
+                    trips.stream().sorted(
+                            (e1, e2) -> e1.getExpectedArrivalTime().compareTo(e2.getExpectedArrivalTime())
+                    ).limit(numOfTripsNeeded).forEach(t -> allTrips.add(t));
+                }
 
-                if(done || allTrips.size() >= maxtrips) {
+                if((done || allTrips.size() >= maxtrips) && !this.done) {
                     if (allTrips.isEmpty()) {
                         System.out.println("No trips found!");
                     }
 
-                    trips.stream().sorted(
-                            (e1, e2) -> e1.getExpectedArrivalTime().compareTo(e2.getExpectedArrivalTime())
-                    ).limit(maxtrips).forEach(t -> System.out.println(t));
+                    allTrips.stream().forEach(t -> System.out.println(t));
 
                     this.done = true;
                     notify();
